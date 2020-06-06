@@ -2,12 +2,13 @@
 ## Download Occurrence Data
 ## Original script by AE Melton. 
 ### Modified and created by ML Gaynor 
-### Edited by ML Gebhart
+### Edited by Max Gebhart
 
 ### Load packages 
 library(ridigbio)
 library(spocc)
 library(scrubr)
+library(dplyr)
 
 ### Data download from iDigBio
 ######
@@ -41,7 +42,6 @@ write.csv(iDigBio_Helianthus, "data/download/iDigBio_Helianthus_NA.csv", row.nam
   Helianthus_annuus <- c("Helianthus annuus", "Helianthus annuus subsp. annuus", "Helianthus annuus var. annuus", "Helianthus annuus f. annuus", "Helianthus annuus subsp. jaegeri", "Helianthus annuus subsp. lenticularis", "Helianthus annuus var. macrocarpus", "Helianthus annuus var. texanus", "Helianthus aridus", "Helianthus aridus var. aridus", "Helianthus erythrocarpus", "Helianthus indicus", "Helianthus jaegeri", "Helianthus lenticularis", "Helianthus macrocarpus", "Helianthus multiflorus", "Helianthus ovatus", "Helianthus platycphalus", "Helianthus tubaformis")
   Helianthus_arizonensis <- c("Helianthus arizonensis")
   Helianthus_atrorubens <- c("Helianthus atrorubens", "Discomela atrorubens", "Discomela sparsiflorus", "Helianthus atrorubens var. alsodes", "Helianthus atrorubens subsp. atrorubens", "Helianthus atrorubens var. atrorubens", "Helianthus sparsifolius")
-  Helianthus_bolanderi <- c("Helianthus bolanderi", "Helianthus exilis")
   Helianthus_californicus <- c("Helianthus californicus", "Helianthus californicus var. californicus")
   Helianthus_carnosus <- c("Helianthus carnosus")
   Helianthus_ciliaris <- c("Helianthus ciliaris", "Helianthus angustifolius subsp. ciliaris")
@@ -50,13 +50,15 @@ write.csv(iDigBio_Helianthus, "data/download/iDigBio_Helianthus_NA.csv", row.nam
   Helianthus_decapetalus <- c("Helianthus decapetalus")
   Helianthus_deserticola <- c("Helianthus deserticola")
   Helianthus_divaricatus <- c("Helianthus divaricatus", "Helianthus divaricatus var. angustifolius", "Helianthus divaricatus var. divaricatus")
+  Helianthus_eggertii <- c("Helianthus eggertii")
+  Helianthus_exilis <- c("Helianthus bolanderi", "Helianthus exilis")
   Helianthus_floridanus <- c("Helianthus floridanus")
   Helianthus_giganteus <- c("Helianthus giganteus", "Helianthus alienus", "Helianthus borealis", "Helianthus giganteus subsp. alienus", "Helianthus giganteus subsp. giganteus", "Helianthus giganteus var. giganteus", "Helianthus giganteus var. subtuberosus", "Helianthus nuttallii var. subtuberosus", "Helianthus subtuberosus", "Helianthus validus")
   Helianthus_glaucophyllus <- c("Helianthus glaucophyllus")
   Helianthus_gracilentus <- c("Helianthus gracilentus")
   Helianthus_grosseserratus <- c("Helianthus grosseserratus", "Helianthus grosseserratus var. grosseserratus", "Helianthus grosseserratus f. grosseserratus", "Helianthus grosseserratus subsp. grosseserratus", "Helianthus grosseserratus var. hypoleucus", "Helianthus grosseserratus subsp. maximus", "Helianthus instabilis")
   Helianthus_heterophyllus <- c("Helianthus heterophyllus", "Helianthus elongatus")
-  Helianthus_hirsutus <- c("Helianthus hirsutus", "Helianthus eggertii", "Helianthus hirsutus var. hirsutus", "Helianthus hirsutus var. stenophyllus", "Helianthus hirsutus var. trachyphyllus", "Helianthus montanus", "Helianthus saxicola", "Helianthus scrophulariifolius", "Helianthus stenophyllus", "Helianthus strumosus", "Helianthus strumosus var. strumosus", "Helianthus trachelifolius")
+  Helianthus_hirsutus <- c("Helianthus hirsutus", "Helianthus hirsutus var. hirsutus", "Helianthus hirsutus var. stenophyllus", "Helianthus hirsutus var. trachyphyllus", "Helianthus montanus", "Helianthus saxicola", "Helianthus scrophulariifolius", "Helianthus stenophyllus", "Helianthus strumosus", "Helianthus strumosus var. strumosus", "Helianthus trachelifolius")
   Helianthus_laciniatus <- c("Helianthus laciniatus", "Helianthus crenatus", "Helianthus heiseri", "Helianthus laciniatus subsp. laciniatus")
   Helianthus_laevigatus <- c("Helianthus laevigatus", "Helianthus laevigatus subsp. laevigatus", "Helianthus laevigatus subsp. reindutus", "Helianthus mollis var. cordatus", "Helianthus reindutus")
   Helianthus_longifolius <- c("Helianthus longifolius", "Helianthus longifolia")
@@ -96,7 +98,6 @@ Helianthus_Pull <- function(x){
   Hel_ann <- Helianthus_Pull(Helianthus_annuus)
   Hel_ari <- Helianthus_Pull(Helianthus_arizonensis)
   Hel_atr <- Helianthus_Pull(Helianthus_atrorubens)
-  Hel_bol <- Helianthus_Pull(Helianthus_bolanderi)
   Hel_cal <- Helianthus_Pull(Helianthus_californicus)
   Hel_car <- Helianthus_Pull(Helianthus_carnosus)
   Hel_cil <- Helianthus_Pull(Helianthus_ciliaris)
@@ -105,6 +106,8 @@ Helianthus_Pull <- function(x){
   Hel_dec <- Helianthus_Pull(Helianthus_decapetalus)
   Hel_des <- Helianthus_Pull(Helianthus_deserticola)
   Hel_div <- Helianthus_Pull(Helianthus_divaricatus)
+  Hel_egg <- Helianthus_Pull(Helianthus_eggertii)
+  Hel_exi <- Helianthus_Pull(Helianthus_exilis)
   Hel_flo <- Helianthus_Pull(Helianthus_floridanus)
   Hel_gig <- Helianthus_Pull(Helianthus_giganteus)
   Hel_gla <- Helianthus_Pull(Helianthus_glaucophyllus)
@@ -140,172 +143,164 @@ Helianthus_Pull <- function(x){
 }
 
 #### Processing spocc download
-##This function will do a couple things first it will remove synonyms or misspellings
-## then it will fix the names and convert the names into a dataframe which can then be saved as 
-## a csv or kept as a variable to be pulled over
-## the variables for the function are as follows
-# v= uncleaned download; f= new fixed name variable (example: Hel_agr_FN); d= new data frame variable (example: Hel_agr_DF)
-##MAKE SURE TO SAVE THE RAN FUNCTION INTO A VARIABLE TO BE CHECKED
-
-Synonym_Scrub <- function(v, f, d){
-  f <- fixnames(v, how = "query")
-  d <- occ2df(f)
-}
-
+## The names for Helianthus were verified manually using the Plant List
+# Functions can be made to make this quicker!
 {
-  Hel_agr_DF <- Synonym_Scrub(Hel_agr, Hel_agr_FN, Hel_agr_DF)
+  Hel_agr_DF <- occ2df(Hel_agr) 
   Hel_agr_DF$name <- "Helianthus agrestis"
-  Hel_ang_DF <- Synonym_Scrub(Hel_ang, Hel_ang_FN, Hel_ang_DF)
-  Hel_agr_DF$name <- "Helianthus agrestis"
-  Hel_ann_DF <- Synonym_Scrub(Hel_ann, Hel_ann_FN, Hel_ann_DF)
+  Hel_ang_DF <- occ2df(Hel_ang) 
+  Hel_ang_DF$name <- "Helianthus angustifolius"
+  Hel_ann_DF <- occ2df(Hel_ann)
   Hel_ann_DF$name <- "Helianthus annuus"
-  Hel_ano_DF <- Synonym_Scrub(Hel_ano, Hel_ano_FN, Hel_ano_DF)
-  Hel_ano_DF$name <- "Helianthus anomlaus"
-  Hel_ari_DF <- Synonym_Scrub(Hel_ari, Hel_ari_FN, Hel_ari_DF)
+  Hel_ano_DF <- occ2df(Hel_ano)
+  Hel_ano_DF$name <- "Helianthus anomalus"
+  Hel_ari_DF <- occ2df(Hel_ari)
   Hel_ari_DF$name <- "Helianthus arizonensis"
-  Hel_atr_DF <- Synonym_Scrub(Hel_atr, Hel_atr_FN, Hel_atr_DF)
+  Hel_atr_DF <- occ2df(Hel_atr)
   Hel_atr_DF$name <- "Helianthus atrorubens"
-  Hel_bol_DF <- Synonym_Scrub(Hel_bol, Hel_bol_FN, Hel_bol_DF)
-  Hel_bol_DF$name <- "Helianthus bolanderi"
-  Hel_cal_DF <- Synonym_Scrub(Hel_cal, Hel_cal_FN, Hel_cal_DF)
+  Hel_cal_DF <- occ2df(Hel_cal)
   Hel_cal_DF$name <- "Helianthus californicus"
-  Hel_car_DF <- Synonym_Scrub(Hel_car, Hel_car_FN, Hel_car_DF)
+  Hel_car_DF <- occ2df(Hel_car)
   Hel_car_DF$name <- "Helianthus carnosus"
-  Hel_cil_DF <- Synonym_Scrub(Hel_cil, Hel_cil_FN, Hel_cil_DF)
+  Hel_cil_DF <- occ2df(Hel_cil)
   Hel_cil_DF$name <- "Helianthus ciliaris"
-  Hel_cus_DF <- Synonym_Scrub(Hel_cus, Hel_cus_FN, Hel_cus_DF)
+  Hel_cus_DF <- occ2df(Hel_cus)
   Hel_cus_DF$name <- "Helianthus cusickii"
-  Hel_deb_DF <- Synonym_Scrub(Hel_deb, Hel_deb_FN, Hel_deb_DF)
+  Hel_deb_DF <- occ2df(Hel_deb)
   Hel_deb_DF$name <- "Helianthus debilis"
-  Hel_dec_DF <- Synonym_Scrub(Hel_dec, Hel_dec_FN, Hel_dec_DF)
+  Hel_dec_DF <- occ2df(Hel_dec)
   Hel_dec_DF$name <- "Helianthus decapetalus"
-  Hel_des_DF <- Synonym_Scrub(Hel_des, Hel_des_FN, Hel_des_DF)
+  Hel_des_DF <- occ2df(Hel_des)
   Hel_des_DF$name <- "Helianthus deserticola"
-  Hel_div_DF <- Synonym_Scrub(Hel_div,  Hel_div_FN, Hel_div_DF)
+  Hel_div_DF <- occ2df(Hel_div)
   Hel_div_DF$name <- "Helianthus divaricatus"
-  Hel_flo_DF <- Synonym_Scrub(Hel_flo,  Hel_flo_FN, Hel_flo_DF)
+  Hel_egg_DF <- occ2df(Hel_egg)
+  Hel_egg_DF$name <- "Helianthus eggertii"
+  Hel_exi_DF <- occ2df(Hel_exi)
+  Hel_exi_DF$name <- "Helianthus exilis"
+  Hel_flo_DF <- occ2df(Hel_flo)
   Hel_flo_DF$name <- "Helianthus floridanus"
-  Hel_gig_DF <- Synonym_Scrub(Hel_gig,  Hel_gig_FN, Hel_gig_DF)
-  Hel_gig_DF$name <- "Helianthus giganteus"
-  Hel_gla_DF <- Synonym_Scrub(Hel_gla,  Hel_gla_FN, Hel_gla_DF)
-  Hel_gla_DF$name <- "Helianthus glaucus"
-  Hel_gra_DF <- Synonym_Scrub(Hel_gra, Hel_gra_FN, Hel_gra_DF)
+  Hel_gig_DF <- occ2df(Hel_gig)
+  Hel_gig_DF$name <-  "Helianthus giganteus"
+  Hel_gla_DF <- occ2df(Hel_gla)
+  Hel_gla_DF$name <- "Helianthus glaucophyllus"
+  Hel_gra_DF <- occ2df(Hel_gra)
   Hel_gra_DF$name <- "Helianthus gracilentus"
-  Hel_gro_DF <- Synonym_Scrub(Hel_gro, Hel_gro_FN, Hel_gro_DF)
+  Hel_gro_DF <- occ2df(Hel_gro)
   Hel_gro_DF$name <- "Helianthus grosseserratus"
-  Hel_het_DF <- Synonym_Scrub(Hel_het, Hel_het_FN, Hel_het_DF)
+  Hel_het_DF <- occ2df(Hel_het)
   Hel_het_DF$name <- "Helianthus heterophyllus"
-  Hel_hir_DF <- Synonym_Scrub(Hel_hir, Hel_hir_FN, Hel_hir_DF)
+  Hel_hir_DF <- occ2df(Hel_hir)
   Hel_hir_DF$name <- "Helianthus hirsutus"
-  Hel_lac_DF <- Synonym_Scrub(Hel_lac, Hel_lac_FN, Hel_lac_DF)
+  Hel_lac_DF <- occ2df(Hel_lac)
   Hel_lac_DF$name <- "Helianthus laciniatus"
-  Hel_lae_DF <- Synonym_Scrub(Hel_lae, Hel_lae_FN, Hel_lae_DF)
-  Hel_lae_DF$name <- "Helianthus laevigatus"
-  Hel_lon_DF <- Synonym_Scrub(Hel_lon, Hel_lon_FN, Hel_lon_DF)
+  Hel_lae_DF <- occ2df(Hel_lae)
+  Hel_lae_DF$name <- "Helianthus levigatus"
+  Hel_lon_DF <- occ2df(Hel_lon)
   Hel_lon_DF$name <- "Helianthus longifolius"
-  Hel_max_DF <- Synonym_Scrub(Hel_max, Hel_max_FN, Hel_max_DF)
+  Hel_max_DF <- occ2df(Hel_max)
   Hel_max_DF$name <- "Helianthus maximiliani"
-  Hel_mic_DF <- Synonym_Scrub(Hel_mic, Hel_mic_FN, Hel_mic_DF)
+  Hel_mic_DF <- occ2df(Hel_mic)
   Hel_mic_DF$name <- "Helianthus microcephalus"
-  Hel_mol_DF <- Synonym_Scrub(Hel_mol, Hel_mol_FN, Hel_mol_DF)
+  Hel_mol_DF <- occ2df(Hel_mol)
   Hel_mol_DF$name <- "Helianthus mollis"
-  Hel_neg_DF <- Synonym_Scrub(Hel_neg, Hel_neg_FN, Hel_neg_DF)
+  Hel_neg_DF <- occ2df(Hel_neg)
   Hel_neg_DF$name <- "Helianthus neglectus"
-  Hel_niv_DF <- Synonym_Scrub(Hel_niv, Hel_niv_FN, Hel_niv_DF)
+  Hel_niv_DF <- occ2df(Hel_niv)
   Hel_niv_DF$name <- "Helianthus niveus"
-  Hel_nut_DF <- Synonym_Scrub(Hel_nut, Hel_nut_FN, Hel_nut_DF)
+  Hel_nut_DF <- occ2df(Hel_nut)
   Hel_nut_DF$name <- "Helianthus nuttallii"
-  Hel_occ_DF <- Synonym_Scrub(Hel_occ, Hel_occ_FN, Hel_occ_DF)
+  Hel_occ_DF <- occ2df(Hel_occ)
   Hel_occ_DF$name <- "Helianthus occidentalis"
-  Hel_par_DF <- Synonym_Scrub(Hel_par, Hel_agr_FN, Hel_agr_DF)
+  Hel_par_DF <- occ2df(Hel_par)
   Hel_par_DF$name <- "Helianthus paradoxus"
-  Hel_pau_DF <- Synonym_Scrub(Hel_pau, Hel_pau_FN, Hel_pau_DF)
+  Hel_pau_DF <- occ2df(Hel_pau)
   Hel_pau_DF$name <- "Helianthus pauciflorus"
-  Hel_pet_DF <- Synonym_Scrub(Hel_pet, Hel_pet_FN, Hel_pet_DF)
+  Hel_pet_DF <- occ2df(Hel_pet)
   Hel_pet_DF$name <- "Helianthus petiolaris"
-  Hel_por_DF <- Synonym_Scrub(Hel_por, Hel_por_FN, Hel_por_DF)
+  Hel_por_DF <- occ2df(Hel_por)
   Hel_por_DF$name <- "Helianthus porteri"
-  Hel_pra_DF <- Synonym_Scrub(Hel_pra, Hel_pra_FN, Hel_pra_DF)
+  Hel_pra_DF <- occ2df(Hel_pra)
   Hel_pra_DF$name <- "Helianthus praecox"
-  Hel_pum_DF <- Synonym_Scrub(Hel_pum, Hel_pum_FN, Hel_pum_DF)
+  Hel_pum_DF <- occ2df(Hel_pum)
   Hel_pum_DF$name <- "Helianthus pumilus"
-  Hel_rad_DF <- Synonym_Scrub(Hel_rad, Hel_rad_FN, Hel_rad_DF)
+  Hel_rad_DF <- occ2df(Hel_rad)
   Hel_rad_DF$name <- "Helianthus radula"
-  Hel_res_DF <- Synonym_Scrub(Hel_res, Hel_res_FN, Hel_res_DF)
+  Hel_res_DF <- occ2df(Hel_res)
   Hel_res_DF$name <- "Helianthus resinosus"
-  Hel_sal_DF <- Synonym_Scrub(Hel_sal, Hel_sal_FN, Hel_sal_DF)
+  Hel_sal_DF <- occ2df(Hel_sal)
   Hel_sal_DF$name <- "Helianthus salicifolius"
-  Hel_sch_DF <- Synonym_Scrub(Hel_sch, Hel_sch_FN, Hel_sch_DF)
+  Hel_sch_DF <- occ2df(Hel_sch)
   Hel_sch_DF$name <- "Helianthus schweinitzii"
-  Hel_sil_DF <- Synonym_Scrub(Hel_sil, Hel_sil_FN, Hel_sil_DF)
+  Hel_sil_DF <- occ2df(Hel_sil)
   Hel_sil_DF$name <- "Helianthus silphioides"
-  Hel_sim_DF <- Synonym_Scrub(Hel_sim, Hel_sim_FN, Hel_sim_DF)
+  Hel_sim_DF <- occ2df(Hel_sim)
   Hel_sim_DF$name <- "Helianthus simulans"
-  Hel_smi_DF <- Synonym_Scrub(Hel_smi, Hel_smi_FN, Hel_smi_DF)
+  Hel_smi_DF <- occ2df(Hel_smi)
   Hel_smi_DF$name <- "Helianthus smithii"
-  Hel_tub_DF <- Synonym_Scrub(Hel_tub, Hel_tub_FN, Hel_tub_DF)
+  Hel_tub_DF <- occ2df(Hel_tub)
   Hel_tub_DF$name <- "Helianthus tuberosus"
-  Hel_win_DF <- Synonym_Scrub(Hel_win, Hel_win_FN, Hel_win_DF)
-  Hel_win_DF$name <- "Helianthus winterii"
+  Hel_win_DF <- occ2df(Hel_win)
+  Hel_win_DF$name <- "Helianthus winteri"
+}
+{
+  write.csv(Hel_agr_DF, "NA_Data/Hel_agr_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_ang_DF, "NA_Data/Hel_ang_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_ano_DF, "NA_Data/Hel_ano_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_ann_DF, "NA_Data/Hel_ann_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_ari_DF, "NA_Data/Hel_ari_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_atr_DF, "NA_Data/Hel_atr_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_cal_DF, "NA_Data/Hel_cal_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_car_DF, "NA_Data/Hel_car_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_cil_DF, "NA_Data/Hel_cil_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_cus_DF, "NA_Data/Hel_cus_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_deb_DF, "NA_Data/Hel_deb_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_dec_DF, "NA_Data/Hel_dec_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_des_DF, "NA_Data/Hel_des_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_div_DF, "NA_Data/Hel_div_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_egg_DF, "NA_Data/Hel_egg_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_exi_DF, "NA_Data/Hel_exi_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_flo_DF, "NA_Data/Hel_flo_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_gig_DF, "NA_Data/Hel_gig_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_gla_DF, "NA_Data/Hel_gla_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_gra_DF, "NA_Data/Hel_gra_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_gro_DF, "NA_Data/Hel_gro_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_het_DF, "NA_Data/Hel_het_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_hir_DF, "NA_Data/Hel_hir_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_lac_DF, "NA_Data/Hel_lac_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_lae_DF, "NA_Data/Hel_lae_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_lon_DF, "NA_Data/Hel_lon_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_max_DF, "NA_Data/Hel_max_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_mic_DF, "NA_Data/Hel_mic_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_mol_DF, "NA_Data/Hel_mol_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_neg_DF, "NA_Data/Hel_neg_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_niv_DF, "NA_Data/Hel_niv_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_nut_DF, "NA_Data/Hel_nut_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_occ_DF, "NA_Data/Hel_occ_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_par_DF, "NA_Data/Hel_par_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_pau_DF, "NA_Data/Hel_pau_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_pet_DF, "NA_Data/Hel_pet_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_por_DF, "NA_Data/Hel_por_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_pra_DF, "NA_Data/Hel_pra_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_pum_DF, "NA_Data/Hel_pum_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_rad_DF, "NA_Data/Hel_rad_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_res_DF, "NA_Data/Hel_res_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_sal_DF, "NA_Data/Hel_sal_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_sch_DF, "NA_Data/Hel_sch_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_sil_DF, "NA_Data/Hel_sil_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_sim_DF, "NA_Data/Hel_sim_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_smi_DF, "NA_Data/Hel_smi_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_tub_DF, "NA_Data/Hel_tub_DF060620.csv", row.names = FALSE)
+  write.csv(Hel_win_DF, "NA_Data/Hel_win_DF060620.csv", row.names = FALSE)
 }
 
-#### Save as csv files 
-{
-  write.csv(Hel_agr_DF, "NA_Data/Hel_agr_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_ang_DF, "NA_Data/Hel_ang_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_ano_DF, "NA_Data/Hel_ano_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_ann_DF, "NA_Data/Hel_ann_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_ari_DF, "NA_Data/Hel_ari_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_atr_DF, "NA_Data/Hel_atr_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_bol_DF, "NA_Data/Hel_bol_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_cal_DF, "NA_Data/Hel_cal_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_car_DF, "NA_Data/Hel_car_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_cil_DF, "NA_Data/Hel_cil_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_cus_DF, "NA_Data/Hel_cus_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_deb_DF, "NA_Data/Hel_deb_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_dec_DF, "NA_Data/Hel_dec_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_des_DF, "NA_Data/Hel_des_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_div_DF, "NA_Data/Hel_div_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_flo_DF, "NA_Data/Hel_flo_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_gig_DF, "NA_Data/Hel_gig_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_gla_DF, "NA_Data/Hel_gla_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_gra_DF, "NA_Data/Hel_gra_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_gro_DF, "NA_Data/Hel_gro_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_het_DF, "NA_Data/Hel_het_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_hir_DF, "NA_Data/Hel_hir_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_lac_DF, "NA_Data/Hel_lac_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_lae_DF, "NA_Data/Hel_lae_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_lon_DF, "NA_Data/Hel_lon_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_max_DF, "NA_Data/Hel_max_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_mic_DF, "NA_Data/Hel_mic_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_mol_DF, "NA_Data/Hel_mol_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_neg_DF, "NA_Data/Hel_neg_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_niv_DF, "NA_Data/Hel_niv_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_nut_DF, "NA_Data/Hel_nut_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_occ_DF, "NA_Data/Hel_occ_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_par_DF, "NA_Data/Hel_par_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_pau_DF, "NA_Data/Hel_pau_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_pet_DF, "NA_Data/Hel_pet_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_por_DF, "NA_Data/Hel_por_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_pra_DF, "NA_Data/Hel_pra_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_pum_DF, "NA_Data/Hel_pum_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_rad_DF, "NA_Data/Hel_rad_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_res_DF, "NA_Data/Hel_res_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_sal_DF, "NA_Data/Hel_sal_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_sch_DF, "NA_Data/Hel_sch_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_sil_DF, "NA_Data/Hel_sil_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_sim_DF, "NA_Data/Hel_sim_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_smi_DF, "NA_Data/Hel_smi_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_tub_DF, "NA_Data/Hel_tub_DF52820.csv", row.names = FALSE)
-  write.csv(Hel_win_DF, "NA_Data/Hel_win_DF52820.csv", row.names = FALSE)
-}
 ## Along with having individual data sheets for each species we're also
 ## going to make one master sheet to make data evaluation a bit easier
 
-write.csv(rbind.data.frame(Hel_agr_DF, Hel_ang_DF, Hel_ano_DF, Hel_ann_DF, Hel_ari_DF, Hel_atr_DF, Hel_bol_DF, Hel_cal_DF, Hel_car_DF, Hel_cil_DF, Hel_cus_DF, Hel_deb_DF, Hel_dec_DF, Hel_des_DF, Hel_div_DF, Hel_flo_DF, Hel_gig_DF, Hel_gla_DF, Hel_gra_DF, Hel_gro_DF, Hel_het_DF, Hel_hir_DF, Hel_lac_DF, Hel_lae_DF, Hel_lon_DF, Hel_max_DF, Hel_mic_DF, Hel_mol_DF, Hel_neg_DF, Hel_niv_DF, Hel_nut_DF, Hel_occ_DF, Hel_par_DF, Hel_pau_DF, Hel_pet_DF, Hel_por_DF, Hel_pra_DF, Hel_pum_DF, Hel_rad_DF, Hel_res_DF, Hel_sal_DF, Hel_sch_DF, Hel_sil_DF, Hel_sim_DF, Hel_smi_DF, Hel_tub_DF, Hel_win_DF), "NA_Data/Master_Hel_Data52820.csv", row.names = FALSE)
+write.csv(rbind.data.frame(Hel_agr_DF, Hel_ang_DF, Hel_ano_DF, Hel_ann_DF, Hel_ari_DF, Hel_atr_DF, Hel_cal_DF, Hel_car_DF, Hel_cil_DF, Hel_cus_DF, Hel_deb_DF, Hel_dec_DF, Hel_des_DF, Hel_div_DF, Hel_exi_DF, Hel_egg_DF, Hel_flo_DF, Hel_gig_DF, Hel_gla_DF, Hel_gra_DF, Hel_gro_DF, Hel_het_DF, Hel_hir_DF, Hel_lac_DF, Hel_lae_DF, Hel_lon_DF, Hel_max_DF, Hel_mic_DF, Hel_mol_DF, Hel_neg_DF, Hel_niv_DF, Hel_nut_DF, Hel_occ_DF, Hel_par_DF, Hel_pau_DF, Hel_pet_DF, Hel_por_DF, Hel_pra_DF, Hel_pum_DF, Hel_rad_DF, Hel_res_DF, Hel_sal_DF, Hel_sch_DF, Hel_sil_DF, Hel_sim_DF, Hel_smi_DF, Hel_tub_DF, Hel_win_DF), "NA_Data/Master_Hel_Data060620.csv", row.names = FALSE)
 
 
 ## Along with creating master data I created a tester csv as well so that
 ##while editing code I would not accidentally mess up the master data
 ##think of this more as a dummy file that can get messed up a little more
-write.csv(rbind.data.frame(Hel_agr_DF, Hel_ang_DF, Hel_ano_DF, Hel_ann_DF, Hel_ari_DF, Hel_atr_DF, Hel_bol_DF, Hel_cal_DF, Hel_car_DF, Hel_cil_DF, Hel_cus_DF, Hel_deb_DF, Hel_dec_DF, Hel_des_DF, Hel_div_DF, Hel_flo_DF, Hel_gig_DF, Hel_gla_DF, Hel_gra_DF, Hel_gro_DF, Hel_het_DF, Hel_hir_DF, Hel_lac_DF, Hel_lae_DF, Hel_lon_DF, Hel_max_DF, Hel_mic_DF, Hel_mol_DF, Hel_neg_DF, Hel_niv_DF, Hel_nut_DF, Hel_occ_DF, Hel_par_DF, Hel_pau_DF, Hel_pet_DF, Hel_por_DF, Hel_pra_DF, Hel_pum_DF, Hel_rad_DF, Hel_res_DF, Hel_sal_DF, Hel_sch_DF, Hel_sil_DF, Hel_sim_DF, Hel_smi_DF, Hel_tub_DF, Hel_win_DF), "NA_Data/Master_Hel_DataTESTER.csv", row.names = FALSE)
+write.csv(rbind.data.frame(Hel_agr_DF, Hel_ang_DF, Hel_ano_DF, Hel_ann_DF, Hel_ari_DF, Hel_atr_DF, Hel_cal_DF, Hel_car_DF, Hel_cil_DF, Hel_cus_DF, Hel_deb_DF, Hel_dec_DF, Hel_des_DF, Hel_div_DF, Hel_exi_DF, Hel_egg_DF, Hel_flo_DF, Hel_gig_DF, Hel_gla_DF, Hel_gra_DF, Hel_gro_DF, Hel_het_DF, Hel_hir_DF, Hel_lac_DF, Hel_lae_DF, Hel_lon_DF, Hel_max_DF, Hel_mic_DF, Hel_mol_DF, Hel_neg_DF, Hel_niv_DF, Hel_nut_DF, Hel_occ_DF, Hel_par_DF, Hel_pau_DF, Hel_pet_DF, Hel_por_DF, Hel_pra_DF, Hel_pum_DF, Hel_rad_DF, Hel_res_DF, Hel_sal_DF, Hel_sch_DF, Hel_sil_DF, Hel_sim_DF, Hel_smi_DF, Hel_tub_DF, Hel_win_DF), "NA_Data/Master_Hel_DataTESTER.csv", row.names = FALSE)
