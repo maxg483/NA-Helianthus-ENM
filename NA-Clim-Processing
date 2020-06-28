@@ -188,9 +188,9 @@ test <- extent(alt_l)
   NITROGEN <- crop(NITROGEN, extent(hullnbuffer))
   writeRaster(NITROGEN, "NA_Data/Present_Layers/NITROGEN.asc", format="ascii")
   
-  OCD <- mask(OCD, hullnbuffer)
-  OCD <- crop(OCD, extent(hullnbuffer))
-  writeRaster(OCD, "NA_Data/Present_Layers/OCD.asc", format="ascii")
+ TOTC <- mask(TOTC, hullnbuffer)
+  TOTC <- crop(TOTC, extent(hullnbuffer))
+  writeRaster(TOTC, "NA_Data/Present_Layers/TOTC.asc", format="ascii")
   
   PHH2O <- mask(PHH2O, hullnbuffer)
   PHH2O <- crop(PHH2O, extent(hullnbuffer))
@@ -204,13 +204,9 @@ test <- extent(alt_l)
   SILT <- crop(SILT, extent(hullnbuffer))
   writeRaster(SILT, "NA_Data/Present_Layers/SILT.asc", format="ascii")
   
-  SOC <- mask(SOC, hullnbuffer)
-  SOC <- crop(SOC, extent(hullnbuffer))
-  writeRaster(SOC, "NA_Data/Present_Layers/SOC.asc", format="ascii")
-  
-  SOCS <- mask(SOCS, hullnbuffer)
-  SOCS <- crop(SOCS, extent(hullnbuffer))
-  writeRaster(SOCS, "NA_Data/Present_Layers/SOCS.asc", format="ascii")
+  PHO <- mask(PHO, hullnbuffer)
+  PHO <- crop(PHO, extent(hullnbuffer))
+  writeRaster(PHO, "NA_Data/Present_Layers/PHO.asc", format="ascii")
 }
 # Select layers for MaxEnt
 ## We only want to include layers that are not highly correlated.
