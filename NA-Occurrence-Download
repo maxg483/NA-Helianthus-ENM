@@ -76,7 +76,7 @@ write.csv(iDigBio_Helianthus, "data/download/iDigBio_Helianthus_NA.csv", row.nam
   Helianthus_praecox <- c("Helianthus praecox", "Helianthus cucumerifolius var. praecox", "Helianthus debilis subsp. praecox", "Helianthus praecox var. praecox", "Helianthus praecox subsp. praecox")
   Helianthus_pumilus <- c("Helianthus pumilus", "Helianthus pumilus var. pumilus")
   Helianthus_radula <- c("Helianthus radula", "Centrocarpha radula", "Rudbeckia radula")
-  Helianthus_resinosus <- c("Helianthus radula")
+  Helianthus_resinosus <- c("Helianthus resinosus")
   Helianthus_salicifolius <- c("Helianthus salicifolius", "Helianthus filiformis", "Helianthus orgyalis")
   Helianthus_schweinitzii <- c("Helianthus schweinitzii")
   Helianthus_silphioides <- c("Helianthus silphioides", "Helianthus atrorubens var. pubescens", "Helianthus kentuckiensis")
